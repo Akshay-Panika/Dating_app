@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:dating_app/constent/app_color.dart';
+import 'package:dating_app/feature/home/screen/view_profile_details_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -134,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Dating App",
+                      "Jessica Parker",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
@@ -323,6 +324,67 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
 
                   const SizedBox(height: 20),
+
+                  // View profile button here
+                  SizedBox(height: 50,),
+                  Container(
+                    width: double.infinity,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Colors.pink.shade300,
+                          Colors.purple.shade300,
+                          Colors.orange.shade300,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                    child: Container(
+                      margin: const EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(26),
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () {
+                         Navigator.push(context, MaterialPageRoute(builder: (context) => ViewProfileDetailScreen(),));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(26),
+                          ),
+                        ),
+                        child: ShaderMask(
+                          shaderCallback: (bounds) => LinearGradient(
+                            colors: [Colors.pink.shade600, Colors.purple.shade600],
+                          ).createShader(bounds),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(Icons.visibility_outlined,
+                                  color: Colors.white,
+                                  size: 22),
+                              SizedBox(width: 10),
+                              Text(
+                                'View Profile',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 50,)
                 ],
               ),
             ),
@@ -399,7 +461,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Icon(Icons.verified,color: Colors.blue,),
                                         ],
                                       ),
-                                      Text('I’m looking for someone who wants to experience life to the fullest and isn’t afraid of a little adventure!', style: TextStyle(color: Colors.white),),
+                                      Row(
+                                        children: const [
+                                          Icon(Icons.location_on,
+                                              color: Colors.white, size: 18),
+                                          SizedBox(width: 4),
+                                          Text(
+                                            '2.5 km away • Indore, India',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      // Text('I’m looking for someone who wants to experience life to the fullest and isn’t afraid of a little adventure!', style: TextStyle(color: Colors.white),),
                                       SizedBox(height: 30,)
                                     ],
                                   ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import '../../chat/screen/chat_member_list_screen.dart';
 import '../../chat/screen/chat_screen.dart';
 import '../../favorite/screen/favorite_screen.dart';
 import '../../gift/screen/gift_screen.dart';
@@ -20,7 +21,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     HomeScreen(),
     GiftScreen(),
     FavoriteScreen(),
-    ChatScreen(),
+    ChatMemberListScreen(),
     ProfileScreen(),
   ];
 
@@ -88,6 +89,79 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ],
           ),
+        ),
+      ),
+
+
+
+      floatingActionButton:
+      _currentIndex ==3 ? SizedBox.shrink():
+      Container(
+        width: 63,  // Reduced from 70 to 63
+        height: 63, // Reduced from 70 to 63
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.pink.shade400,
+              Colors.pink.shade600,
+            ],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.pink.withOpacity(0.4),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Outer circular progress
+            SizedBox(
+              width: 63,  // Reduced from 70 to 63
+              height: 63, // Reduced from 70 to 63
+              child: CircularProgressIndicator(
+                value: 0.75, // 75% completion - change this dynamically
+                strokeWidth: 3.6, // Reduced from 4 to 3.6
+                backgroundColor: Colors.white.withOpacity(0.3),
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            ),
+            // Inner circle
+            Container(
+              width: 55,  // Reduced from 58 to 52
+              height: 55, // Reduced from 58 to 52
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '75%', // Change this dynamically
+                    style: TextStyle(
+                      fontSize: 14.4, // Reduced from 16 to 14.4
+                      fontWeight: FontWeight.bold,
+                      color: Colors.pink.shade600,
+                    ),
+                  ),
+                  Text(
+                    'Profile',
+                    style: TextStyle(
+                      fontSize: 8.1, // Reduced from 9 to 8.1
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

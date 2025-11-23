@@ -359,7 +359,7 @@ class _OTPBottomSheetState extends State<OTPBottomSheet> {
 
         // Close bottom sheet and navigate
         Navigator.pop(context);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CoupleInfoScreen(),));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BasicInfoScreen(),));
         // Navigator.pushReplacementNamed(context, '/home');
       }
     });
