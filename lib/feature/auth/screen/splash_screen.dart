@@ -1,3 +1,4 @@
+import 'package:dating_app/feature/auth/screen/auth_screen.dart';
 import 'package:dating_app/feature/auth/screen/verify_phone_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -42,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen>
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => VerifyPhoneScreen()),
+          MaterialPageRoute(builder: (context) => AuthScreen()),
         );
       }
     });
@@ -78,13 +79,13 @@ class _SplashScreenState extends State<SplashScreen>
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.pink,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Icon(
-                  Icons.flutter_dash,
+                  Icons.favorite,
                   size: 80,
-                  color: Colors.blue,
+                  color: Colors.white,
                 ),
               ),
             ),

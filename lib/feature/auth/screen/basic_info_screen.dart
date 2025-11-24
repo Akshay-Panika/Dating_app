@@ -24,6 +24,10 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
   String _gender = 'Male';
   DateTime? _dob;
   File? _profilePic;
@@ -48,6 +52,8 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
     _nameController.dispose();
     _emailController.dispose();
     _ageController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     _pageController.dispose();
     _mapController?.dispose();
     super.dispose();
@@ -282,6 +288,39 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
   }
 
   void _submitForm() {
+    // Validate password
+    if (_passwordController.text.isEmpty || _confirmPasswordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter and confirm your password')),
+      );
+      return;
+    }
+
+    if (_passwordController.text.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password must be at least 8 characters')),
+      );
+      return;
+    }
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match')),
+      );
+      return;
+    }
+
+    if (!_passwordController.text.contains(RegExp(r'[A-Z]')) ||
+        !_passwordController.text.contains(RegExp(r'[a-z]')) ||
+        !_passwordController.text.contains(RegExp(r'[0-9]'))) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password must contain uppercase, lowercase, and numbers'),
+        ),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
@@ -359,7 +398,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
               children: [
                 _buildBasicInfoForm(),
                 _buildIntranetInSeeing(),
-                _buildWelcomePage(),
+                _buildSetPasswordForm(),
               ],
             ),
           ),
@@ -783,173 +822,198 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
     );
   }
 
-
-  Widget _buildWelcomePage() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
+  Widget _buildSetPasswordForm() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Welcome Text
           const Text(
-            'Welcome Aboard!',
+            'Secure Your Account',
             style: TextStyle(
-              fontSize: 32,
+              fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
-            textAlign: TextAlign.center,
           ),
-
-          const SizedBox(height: 16),
-
+          const SizedBox(height: 8),
           Text(
-            'Your profile is all set up and ready to go!',
+            'Create a strong password to protect your account',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               color: Colors.grey[600],
-              height: 1.5,
             ),
-            textAlign: TextAlign.center,
           ),
+          const SizedBox(height: 20),
 
-          const SizedBox(height: 50),
-
-          // Feature Cards
-          _buildFeatureCard(
-            icon: Icons.explore,
-            title: 'Discover Matches',
-            description: 'Find people who share your interests',
-            gradient: [Colors.pink.shade400, Colors.pink.shade600],
-          ),
-
-          const SizedBox(height: 16),
-
-          _buildFeatureCard(
-            icon: Icons.chat_bubble_outline,
-            title: 'Start Conversations',
-            description: 'Connect and chat with your matches',
-            gradient: [Colors.purple.shade400, Colors.purple.shade600],
-          ),
-
-          const SizedBox(height: 16),
-
-          _buildFeatureCard(
-            icon: Icons.favorite_border,
-            title: 'Find Your Match',
-            description: 'Your perfect match is just a swipe away',
-            gradient: [Colors.orange.shade400, Colors.orange.shade600],
-          ),
-
-          const SizedBox(height: 50),
-
-          // Profile Summary
-          if (_profilePic != null || _nameController.text.isNotEmpty)
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
+          // Password Field
+          _buildLabel('Password'),
+          const SizedBox(height: 10),
+          TextFormField(
+            controller: _passwordController,
+            obscureText: !_isPasswordVisible,
+            decoration: InputDecoration(
+              hintText: 'Enter your password',
+              hintStyle: TextStyle(color: Colors.grey[400]),
+              prefixIcon: Icon(Icons.lock_outline, color: Colors.grey[600]),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: Colors.grey[600],
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
               ),
-              child: Row(
-                children: [
-                  // Profile Picture
-                  Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.pink.withOpacity(0.3),
-                        width: 2,
-                      ),
-                    ),
-                    child: _profilePic == null
-                        ? Icon(Icons.person, size: 30, color: Colors.grey)
-                        : ClipOval(
-                      child: Image.file(
-                        _profilePic!,
-                        fit: BoxFit.cover,
-                        width: 60,
-                        height: 60,
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(width: 16),
-
-                  // User Info
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _nameController.text.isNotEmpty
-                              ? _nameController.text
-                              : 'User',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            if (_ageController.text.isNotEmpty) ...[
-                              Icon(Icons.cake_outlined,
-                                  size: 14,
-                                  color: Colors.grey[600]),
-                              const SizedBox(width: 4),
-                              Text(
-                                '${_ageController.text} years old',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                            ],
-                            Icon(Icons.person_outline,
-                                size: 14,
-                                color: Colors.grey[600]),
-                            const SizedBox(width: 4),
-                            Text(
-                              _gender,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Checkmark
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.check,
-                      color: Colors.green,
-                      size: 20,
-                    ),
-                  ),
-                ],
+              filled: true,
+              fillColor: Colors.grey[50],
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.grey[300]!),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.grey[300]!),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.pink, width: 2),
               ),
             ),
+          ),
+          const SizedBox(height: 20),
+
+          // Confirm Password Field
+          _buildLabel('Confirm Password'),
+          const SizedBox(height: 10),
+          TextFormField(
+            controller: _confirmPasswordController,
+            obscureText: !_isConfirmPasswordVisible,
+            decoration: InputDecoration(
+              hintText: 'Re-enter your password',
+              hintStyle: TextStyle(color: Colors.grey[400]),
+              prefixIcon: Icon(Icons.lock_outline, color: Colors.grey[600]),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: Colors.grey[600],
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                  });
+                },
+              ),
+              filled: true,
+              fillColor: Colors.grey[50],
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.grey[300]!),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.grey[300]!),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.pink, width: 2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Password Requirements
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.blue.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.blue.withOpacity(0.2)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.blue[700], size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Password Requirements',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.blue[700],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                _buildPasswordRequirement(
+                  'At least 8 characters',
+                  _passwordController.text.length >= 8,
+                ),
+                _buildPasswordRequirement(
+                  'Contains uppercase letter',
+                  _passwordController.text.contains(RegExp(r'[A-Z]')),
+                ),
+                _buildPasswordRequirement(
+                  'Contains lowercase letter',
+                  _passwordController.text.contains(RegExp(r'[a-z]')),
+                ),
+                _buildPasswordRequirement(
+                  'Contains a number',
+                  _passwordController.text.contains(RegExp(r'[0-9]')),
+                ),
+                _buildPasswordRequirement(
+                  'Passwords match',
+                  _passwordController.text.isNotEmpty &&
+                      _passwordController.text == _confirmPasswordController.text,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 30),
+
+          // Security Features
+          _buildFeatureCard(
+            icon: Icons.security,
+            title: 'Secure & Encrypted',
+            description: 'Your data is protected with end-to-end encryption',
+            gradient: [Colors.blue[400]!, Colors.blue[600]!],
+          ),
+          const SizedBox(height: 12),
+          _buildFeatureCard(
+            icon: Icons.verified_user,
+            title: 'Privacy First',
+            description: 'We never share your personal information',
+            gradient: [Colors.green[400]!, Colors.green[600]!],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPasswordRequirement(String text, bool isMet) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          Icon(
+            isMet ? Icons.check_circle : Icons.radio_button_unchecked,
+            color: isMet ? Colors.green : Colors.grey[400],
+            size: 18,
+          ),
+          const SizedBox(width: 10),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 13,
+              color: isMet ? Colors.green[700] : Colors.grey[600],
+              fontWeight: isMet ? FontWeight.w500 : FontWeight.normal,
+            ),
+          ),
         ],
       ),
     );

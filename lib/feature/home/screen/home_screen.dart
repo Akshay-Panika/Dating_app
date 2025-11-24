@@ -11,6 +11,132 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  final List<Map<String, dynamic>> users = [
+    // ---- Women ----
+    {
+      "name": "Aditi Sharma",
+      "age": 24,
+      "city": "Indore",
+      "imageUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500",
+    },
+    {
+      "name": "Riya Mehta",
+      "age": 23,
+      "city": "Mumbai",
+      "imageUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500",
+    },
+    {
+      "name": "Sneha Verma",
+      "age": 25,
+      "city": "Delhi",
+      "imageUrl": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500",
+    },
+    {
+      "name": "Kritika Patel",
+      "age": 22,
+      "city": "Ahmedabad",
+      "imageUrl": "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=500",
+    },
+    {
+      "name": "Simran Kaur",
+      "age": 26,
+      "city": "Chandigarh",
+      "imageUrl": "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?w=500",
+    },
+    {
+      "name": "Pooja Nair",
+      "age": 24,
+      "city": "Bangalore",
+      "imageUrl": "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=500",
+    },
+
+    // ---- Men ----
+    {
+      "name": "Arjun Singh",
+      "age": 27,
+      "city": "Jaipur",
+      "imageUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500",
+    },
+    {
+      "name": "Rohan Verma",
+      "age": 28,
+      "city": "Delhi",
+      "imageUrl": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=500",
+    },
+    {
+      "name": "Varun Mehta",
+      "age": 26,
+      "city": "Pune",
+      "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500",
+    },
+    {
+      "name": "Kunal Patel",
+      "age": 25,
+      "city": "Ahmedabad",
+      "imageUrl": "https://images.unsplash.com/photo-1546456073-6712f79251bb?w=500",
+    },
+    {
+      "name": "Vikas Sharma",
+      "age": 29,
+      "city": "Lucknow",
+      "imageUrl": "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=500",
+    },
+    {
+      "name": "Aman Gupta",
+      "age": 24,
+      "city": "Delhi",
+      "imageUrl": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=500",
+    },
+
+    // ---- More Women ----
+    {
+      "name": "Nisha Rawat",
+      "age": 23,
+      "city": "Udaipur",
+      "imageUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500",
+    },
+    {
+      "name": "Anjali Desai",
+      "age": 22,
+      "city": "Surat",
+      "imageUrl": "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=500",
+    },
+    {
+      "name": "Shivani Tiwari",
+      "age": 27,
+      "city": "Bhopal",
+      "imageUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500",
+    },
+
+    // ---- More Men ----
+    {
+      "name": "Devansh Joshi",
+      "age": 28,
+      "city": "Vadodara",
+      "imageUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500",
+    },
+    {
+      "name": "Harshit Yadav",
+      "age": 26,
+      "city": "Gurgaon",
+      "imageUrl": "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=500",
+    },
+    {
+      "name": "Sarthak Kapoor",
+      "age": 30,
+      "city": "Noida",
+      "imageUrl": "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=500",
+    },
+    {
+      "name": "Yash Raj",
+      "age": 25,
+      "city": "Delhi",
+      "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500",
+    },
+  ];
+  int currentIndex = 0;
+
   double dx = 0;
   double dy = 0;
   double angle = 0;
@@ -36,11 +162,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void onLike() {
     showCenterAction(Icons.thumb_up, Colors.green);
     animateSwipe(1);
+    nextUser();
   }
 
   void onDislike() {
     showCenterAction(Icons.close, Colors.red);
     animateSwipe(-1);
+    previousUser();
   }
 
   void onSuperLike() {
@@ -73,6 +201,28 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void nextUser() {
+    setState(() {
+      if (currentIndex < users.length - 1) {
+        currentIndex++;   // NEXT USER
+      } else {
+        currentIndex = 0; // RESET TO FIRST
+      }
+    });
+  }
+
+  void previousUser() {
+    setState(() {
+      if (currentIndex > 0) {
+        currentIndex--;   // PREVIOUS USER
+      } else {
+        currentIndex = users.length - 1; // LAST USER
+      }
+    });
+  }
+
+
+
   // SWIPE ICON LOGIC
   IconData getSwipeIcon() {
     if (dx > 0) return Icons.thumb_up;
@@ -88,6 +238,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = users[currentIndex];
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
@@ -430,9 +582,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 margin: EdgeInsets.only(bottom: 40),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12),
-                                  image: const DecorationImage(
-                                    image: AssetImage(
-                                        'assets/image/indian-couple-celebrating-propose-day.jpg'),
+                                  image:  DecorationImage(
+                                    image: NetworkImage(user["imageUrl"]),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -456,18 +607,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       Row(
                                         children: [
-                                          Text('Aditi Rathod', style: TextStyle(fontSize:24,color: Colors.white,fontWeight: FontWeight.bold),),
+                                          Text( "${user["name"]}, ${user["age"]}", style: TextStyle(fontSize:24,color: Colors.white,fontWeight: FontWeight.bold),),
                                           SizedBox(width: 10,),
                                           Icon(Icons.verified,color: Colors.blue,),
                                         ],
                                       ),
                                       Row(
-                                        children: const [
+                                        children:  [
                                           Icon(Icons.location_on,
                                               color: Colors.white, size: 18),
                                           SizedBox(width: 4),
                                           Text(
-                                            '2.5 km away • Indore, India',
+                                            "${user["city"]}, India",
                                             style: TextStyle(
                                               fontSize: 16,
                                               color: Colors.white,
